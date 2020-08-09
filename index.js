@@ -1,77 +1,79 @@
-//Book constructor 
-
-function Book(title, author, isbn) {
-    this.title = title; 
-    this.author = author; 
-    this.isbn = isbn; 
+class Book {
+    constructor(title, author, isbn) {
+        this.title = title
+        this.author = author
+        this.isbn = isbn 
+    }
 }
 
-//UI Constructor 
-function UI() {}
+const form = document.querySelector('form')
 
-UI.prototype.addBookToList = function(book) {
-    const list = document.getElementById('book-list'); 
-    // create tr element 
-    const row = document.createElement('tr')
+class UI {
+    addBook(book) {
+        const $tbody = document.querySelector('#book-list')
+        const $tr = document.createElement('tr')
+        const $div = document.createElement('div')
 
-    //insert cols 
-    row.innerHTML = `
-    <td>${book.title}</td>
-    <td>${book.author}</td>
-    <td>${book.isbn}</td>
-    <td><a href="#" class="delete">X</a></td>`
+        $tr.innerHTML = `
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${book.isbn}</td>
+            <a href="#" id="remove">X</a>
+        `
 
-    list.append(row);
+        $div.textContent = 'Book added!'
+        $div.classList.add('success')
+
+        $tbody.append($tr); 
+        form.prepend($div)
+
+        setTimeout(() => {
+            const removeMessage = document.querySelector('.success'); 
+            removeMessage.remove(); 
+        }, 3000)
+    }
+
+    removeBook() {
+
+    }
+
+    clearFields() {
+        document.querySelector('#title').value = ""
+        document.querySelector('#author').value = ""
+        document.querySelector('#isbn').value = ""
+    }
+
+    showAlert() {
+        const $div = document.createElement('div')
+        $div.innerText = 'Please fill out all three input fields!'
+        $div.classList.add('error')
+        form.prepend($div)
+
+        setTimeout(() => {
+            const removeMessage = document.querySelector('.error'); 
+            removeMessage.remove(); 
+        }, 3000)
+    }
+
 }
 
-UI.prototype.clearFields = function () {
-    document.getElementById('title').value = ''
-    document.getElementById('author').value = ''
-    document.getElementById('isbn').value = ''
-}
 
-UI.prototype.showAlert = function (message, className) {
-    //create div 
-    const div = document.createElement('div')
-    //add classes 
-    div.className = `alert ${className}`; 
-    //add text 
-    div.appendChild(document.createTextNode(message));
-    //get parent 
-    const container = document.querySelector('container'); 
-    const form = document.querySelector('#book-form')
-    container.insertBefore(div, form )
-
-    setTimeout(function () {
-        document.querySelector('.alert').remove();
-    }, 3000)
-}
-
-//Event Listeners 
-const bookForm = document.getElementById('book-form')
-bookForm.addEventListener('submit', (event) => {
+form.addEventListener('submit', (event) => {
     event.preventDefault(); 
-    const title = document.getElementById('title').value, 
-          author = document.getElementById('author').value, 
-          isbn = document.getElementById('isbn').value 
 
-    const book = new Book (title, author, isbn)
+    //Grab values of input fields 
+    const title = document.querySelector('#title').value,
+          author = document.querySelector('#author').value, 
+          isbn = document.querySelector('#isbn').value
 
     const ui = new UI()
 
-    //validate
-    if(title === '' || author === "" || isbn === "") {
-        //Error 
-        UI.showAlert('Please fill in all fields', 'error')
+    if (title === "" || author === "" || isbn === "") {
+        ui.showAlert(); 
     } else {
-        ui.addBookToList(book)
+        const book = new Book (title, author, isbn); 
+        ui.addBook(book); 
+        ui.clearFields(); 
     }
 
-    //add book to list 
-    ui.addBookToList(book); 
-    ui.clearFields(); 
-
-}) 
-
-
-//clear fields 
+})
