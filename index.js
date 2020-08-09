@@ -21,7 +21,30 @@ UI.prototype.addBookToList = function(book) {
     <td>${book.isbn}</td>
     <td><a href="#" class="delete">X</a></td>`
 
-    console.log(row)
+    list.append(row);
+}
+
+UI.prototype.clearFields = function () {
+    document.getElementById('title').value = ''
+    document.getElementById('author').value = ''
+    document.getElementById('isbn').value = ''
+}
+
+UI.prototype.showAlert = function (message, className) {
+    //create div 
+    const div = document.createElement('div')
+    //add classes 
+    div.className = `alert ${className}`; 
+    //add text 
+    div.appendChild(document.createTextNode(message));
+    //get parent 
+    const container = document.querySelector('container'); 
+    const form = document.querySelector('#book-form')
+    container.insertBefore(div, form )
+
+    setTimeout(function () {
+        document.querySelector('.alert').remove;
+    }, 3000)
 }
 
 //Event Listeners 
@@ -36,8 +59,19 @@ bookForm.addEventListener('submit', (event) => {
 
     const ui = new UI()
 
+    //validate
+    if(title === '' || author === "" || isbn === "") {
+        //Error 
+        UI.showAlert('Please fill in all fields', 'error')
+    } else {
+        ui.addBookToList(book)
+    }
+
     //add book to list 
     ui.addBookToList(book); 
+    ui.clearFields(); 
 
 }) 
 
+
+//clear fields 
