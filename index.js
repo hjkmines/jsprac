@@ -1,3 +1,6 @@
+const form = document.querySelector('form')
+const $body = document.body
+
 class Book {
     constructor(title, author, isbn) {
         this.title = title
@@ -6,7 +9,6 @@ class Book {
     }
 }
 
-const form = document.querySelector('form')
 
 class UI {
     addBook(book) {
@@ -33,8 +35,8 @@ class UI {
         }, 3000)
     }
 
-    removeBook() {
-
+    removeBook(target) {
+        target.parentElement.parentElement.remove(); 
     }
 
     clearFields() {
@@ -58,6 +60,7 @@ class UI {
 }
 
 
+//submit event listener 
 form.addEventListener('submit', (event) => {
     event.preventDefault(); 
 
@@ -75,5 +78,16 @@ form.addEventListener('submit', (event) => {
         ui.addBook(book); 
         ui.clearFields(); 
     }
+
+})
+
+// remove event listener 
+const bookList = document.querySelector('#book-list')
+bookList.addEventListener('click', (event) => {
+    event.preventDefault(); 
+
+    const ui = new UI(); 
+
+    ui.removeBook(event.target)
 
 })
