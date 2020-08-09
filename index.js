@@ -1,93 +1,23 @@
-const form = document.querySelector('form')
-const $body = document.body
+const http = new HttpRequests 
 
-class Book {
-    constructor(title, author, isbn) {
-        this.title = title
-        this.author = author
-        this.isbn = isbn 
-    }
-}
+const data = [
+    name: 'John', 
+    username: 'johndoe', 
+    email: 'jdoe@gmail.com'
+]
 
+http.get('http://localhost:3000/teams')
+    .then(response => console.log(response))
+    .catch(err => console.log(err))
 
-class UI {
-    addBook(book) {
-        const $tbody = document.querySelector('#book-list')
-        const $tr = document.createElement('tr')
-        const $div = document.createElement('div')
+http.post('http://localhost:3000/teams', data)
+    .then(response => console.log(response))
+    .catch(err => console.log(err))
 
-        $tr.innerHTML = `
-            <td>${book.title}</td>
-            <td>${book.author}</td>
-            <td>${book.isbn}</td>
-            <a href="#" id="remove">X</a>
-        `
+http.put('http://localhost:3000/teams/1', data)
+    .then(response => console.log(response))
+    .catch(err => console.log(err))
 
-        $div.textContent = 'Book added!'
-        $div.classList.add('success')
-
-        $tbody.append($tr); 
-        form.prepend($div)
-
-        setTimeout(() => {
-            const removeMessage = document.querySelector('.success'); 
-            removeMessage.remove(); 
-        }, 3000)
-    }
-
-    removeBook(target) {
-        target.parentElement.parentElement.remove(); 
-    }
-
-    clearFields() {
-        document.querySelector('#title').value = ""
-        document.querySelector('#author').value = ""
-        document.querySelector('#isbn').value = ""
-    }
-
-    showAlert() {
-        const $div = document.createElement('div')
-        $div.innerText = 'Please fill out all three input fields!'
-        $div.classList.add('error')
-        form.prepend($div)
-
-        setTimeout(() => {
-            const removeMessage = document.querySelector('.error'); 
-            removeMessage.remove(); 
-        }, 3000)
-    }
-
-}
-
-
-//submit event listener 
-form.addEventListener('submit', (event) => {
-    event.preventDefault(); 
-
-    //Grab values of input fields 
-    const title = document.querySelector('#title').value,
-          author = document.querySelector('#author').value, 
-          isbn = document.querySelector('#isbn').value
-
-    const ui = new UI()
-
-    if (title === "" || author === "" || isbn === "") {
-        ui.showAlert(); 
-    } else {
-        const book = new Book (title, author, isbn); 
-        ui.addBook(book); 
-        ui.clearFields(); 
-    }
-
-})
-
-// remove event listener 
-const bookList = document.querySelector('#book-list')
-bookList.addEventListener('click', (event) => {
-    event.preventDefault(); 
-
-    const ui = new UI(); 
-
-    ui.removeBook(event.target)
-
-})
+http.delete('http://localhost:3000/teams/1')
+    .then(response => console.log(response)) 
+    .catch(err => console.log(err))
