@@ -43,7 +43,7 @@ UI.prototype.showAlert = function (message, className) {
     container.insertBefore(div, form )
 
     setTimeout(function () {
-        document.querySelector('.alert').remove;
+        document.querySelector('.alert').remove();
     }, 3000)
 }
 
